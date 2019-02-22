@@ -12,7 +12,7 @@ class RecorderModule {
 
     @Provides
     @AppSingleton
-    fun searchRepository(): RecorderRepository {
+    fun repository(): RecorderRepository {
         return RecorderRepository()
     }
 

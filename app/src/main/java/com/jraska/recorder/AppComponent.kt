@@ -6,7 +6,7 @@ import dagger.Component
 
 @AppSingleton
 @Component(
-    modules = [RecorderModule::class, AppModule::class]
+    modules = [RecorderModule::class, AppModule::class, SchedulersModule::class]
 )
 interface AppComponent {
     fun viewModelFactory(): ViewModelProvider.Factory

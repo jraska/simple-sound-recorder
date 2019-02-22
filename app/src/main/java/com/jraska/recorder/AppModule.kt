@@ -13,14 +13,4 @@ class AppModule {
     fun viewModelFactoryBinding(factory: ViewModelFactory): ViewModelProvider.Factory {
         return factory
     }
-
-    @Provides
-    @AppSingleton
-    fun appSchedulers(): AppSchedulers {
-        return AppSchedulers(
-            AndroidSchedulers.mainThread(),
-            Schedulers.computation(),
-            Schedulers.io()
-        )
-    }
 }
