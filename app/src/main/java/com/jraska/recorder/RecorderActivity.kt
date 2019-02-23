@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.epoxy.SimpleEpoxyAdapter
+import com.jraska.recorder.recording.Record
 import com.jraska.recorder.recording.RecordModel
 import com.jraska.recorder.recording.RecorderViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -30,9 +31,9 @@ class RecorderActivity : AppCompatActivity() {
     }
 
     private fun onState(state: RecorderViewModel.ViewState) {
-        val models = state.records.map { RecordModel(it, viewModel::onItemClicked) }
-        adapter.removeAllModels()
-        adapter.addModels(models)
+        val records = state.records
+
+        bindRecords(records)
 
         main_fab.isEnabled = state.recordingState.uiEnabled
         if (state.recordingState.recording) {
@@ -40,6 +41,21 @@ class RecorderActivity : AppCompatActivity() {
         } else {
             setFabIcon(android.R.drawable.ic_dialog_dialer)
         }
+    }
+
+    private fun bindRecords(records: List<Record>) {
+        if (!recordsChanged(records)) {
+            return
+        }
+
+        val models = records.map { RecordModel(it, viewModel::onItemClicked) }
+        adapter.removeAllModels()
+        adapter.addModels(models)
+    }
+
+    private fun recordsChanged(records: List<Record>): Boolean {
+        val previousRecords = adapter.models.map { (it as RecordModel).record }
+        return previousRecords != records
     }
 
     private fun setFabIcon(resource: Int) {
