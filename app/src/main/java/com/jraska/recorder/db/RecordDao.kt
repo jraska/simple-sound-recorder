@@ -1,18 +1,15 @@
 package com.jraska.recorder.db
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import io.reactivex.Observable
 
 @Dao
 interface RecordDao {
-    @Query("SELECT * FROM record")
+    @Query("SELECT * FROM record order by created_at")
     fun getAll(): Observable<List<RecordDbo>>
 
-    @Insert
-    fun insert(record: RecordDbo)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertOrUpdate(record: RecordDbo)
 
     @Delete
     fun delete(delete: RecordDbo)

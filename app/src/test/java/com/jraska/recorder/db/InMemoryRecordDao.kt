@@ -11,8 +11,15 @@ class InMemoryRecordDao(
         return subject
     }
 
-    override fun insert(record: RecordDbo) {
-        list.add(record)
+    override fun insertOrUpdate(record: RecordDbo) {
+        val existing = list.find { it.uid == record.uid }
+        if (existing != null) {
+            val indexOf = list.indexOf(existing)
+            list[indexOf] = record
+        } else {
+            list.add(record)
+        }
+
         subject.onNext(list)
     }
 

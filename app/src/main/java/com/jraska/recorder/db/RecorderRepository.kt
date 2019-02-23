@@ -13,8 +13,8 @@ class RecorderRepository constructor(
             .map { records -> records.map { convert(it) } }
     }
 
-    fun insert(record: Record): Completable {
-        return Completable.fromAction { recordDao.insert(convert(record)) }
+    fun save(record: Record): Completable {
+        return Completable.fromAction { recordDao.insertOrUpdate(convert(record)) }
     }
 
     fun delete(record: Record): Completable {
@@ -22,10 +22,10 @@ class RecorderRepository constructor(
     }
 
     private fun convert(dbo: RecordDbo): Record {
-        return Record(UUID.fromString(dbo.uid), dbo.name)
+        return Record(UUID.fromString(dbo.uid), dbo.name, dbo.createdAt)
     }
 
     private fun convert(record: Record): RecordDbo {
-        return RecordDbo(record.id.toString(), record.title)
+        return RecordDbo(record.id.toString(), record.title, record.createdAt)
     }
 }

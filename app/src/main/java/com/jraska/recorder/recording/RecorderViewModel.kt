@@ -47,11 +47,25 @@ class RecorderViewModel @Inject constructor(
         disposables.add(disposable)
     }
 
+    fun onRenameClicked(record: Record, newName: String) {
+        if (newName.isEmpty()) {
+            return
+        }
+
+        val disposable = recorderRepository
+            .save(record.copy(title = newName))
+            .subscribeOn(appSchedulers.io)
+            .subscribe({ Timber.i("Record Updated") },
+                { Timber.e(it, "Error renaming record %s", record) })
+
+        disposables.add(disposable)
+    }
+
     fun onRecordToggleClicked() {
         val recording = this.recording
         if (recording != null) {
             val id = recording.stopRecording()
-            recorderRepository.insert(Record(id, "new record"))
+            recorderRepository.save(Record(id, "new record"))
                 .subscribeOn(appSchedulers.io)
                 .subscribe()
             this.recording = null

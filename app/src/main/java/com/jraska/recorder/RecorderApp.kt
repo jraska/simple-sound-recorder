@@ -2,7 +2,6 @@ package com.jraska.recorder
 
 import android.app.Application
 import androidx.lifecycle.ViewModelProvider
-import com.jakewharton.threetenabp.AndroidThreeTen
 import com.jraska.recorder.db.DaggerDatabaseComponent
 import com.jraska.recorder.db.DatabaseModule
 import timber.log.Timber
@@ -20,7 +19,6 @@ open class RecorderApp : Application(), HasViewModelFactory {
 
 //        setupCrashReporting()
         setupLogging()
-        setupThreeTen()
     }
 
     private fun setupLogging() {
@@ -29,10 +27,6 @@ open class RecorderApp : Application(), HasViewModelFactory {
         } else {
 //            Timber.plant(SomeReportingTree())
         }
-    }
-
-    private fun setupThreeTen() {
-        AndroidThreeTen.init(this)
     }
 
     private fun createAppComponent(): AppComponent {
