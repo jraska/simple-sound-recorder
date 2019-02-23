@@ -14,7 +14,8 @@ class RecorderViewModel @Inject constructor(
     private val recorderRepository: RecorderRepository,
     private val appSchedulers: AppSchedulers,
     private val recordPlayer: RecordsPlayer,
-    private val recorder: Recorder
+    private val recorder: Recorder,
+    private val deleteRecordUseCase: DeleteRecordUseCase
 ) : ViewModel() {
 
     private var recording: Recorder.OngoingRecording? = null
@@ -33,6 +34,15 @@ class RecorderViewModel @Inject constructor(
         val disposable = recordPlayer.player(record.id)
             .subscribeOn(appSchedulers.io)
             .subscribe({ Timber.d("Played $record") }, { Timber.e(it) })
+
+        disposables.add(disposable)
+    }
+
+    fun onDeleteClicked(record: Record) {
+        val disposable = deleteRecordUseCase.execute(record)
+            .subscribeOn(appSchedulers.io)
+            .subscribe({ Timber.i("Record deleted") },
+                { Timber.e(it, "Error deleting record %s", record) })
 
         disposables.add(disposable)
     }
