@@ -48,7 +48,14 @@ class RecorderActivity : AppCompatActivity() {
             return
         }
 
-        val models = records.map { RecordModel(it, viewModel::onItemClicked, viewModel::onDeleteClicked) }
+        val models = records.map {
+            RecordModel(
+                it,
+                viewModel::onItemClicked,
+                viewModel::onDeleteClicked,
+                viewModel::onRenameClicked
+            )
+        }
         adapter.removeAllModels()
         adapter.addModels(models)
     }
