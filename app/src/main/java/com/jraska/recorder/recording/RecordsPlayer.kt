@@ -4,8 +4,8 @@ import android.media.MediaPlayer
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver
 import io.reactivex.disposables.Disposable
-import timber.log.Timber
 import java.io.File
+import java.io.FileNotFoundException
 import java.util.*
 import javax.inject.Inject
 
@@ -13,23 +13,10 @@ class RecordsPlayer @Inject constructor(
     private val storageRepository: StorageRepository
 ) {
 
-    fun play(soundId: UUID) {
+    fun player(soundId: UUID): Completable {
         val file = storageRepository.fileForId(soundId)
-        if (file.exists()) {
-            play(file)
-        } else {
-            Timber.e("Sound %s file not found.", soundId)
-        }
-    }
 
-    private fun play(file: File) {
-        val mediaPlayer = MediaPlayer()
-
-        mediaPlayer.setDataSource(file.absolutePath)
-        mediaPlayer.prepare()
-        mediaPlayer.start()
-
-        mediaPlayer.setOnCompletionListener { mediaPlayer.release() }
+        return MediaPlayerCompletable(file)
     }
 
     private class MediaPlayerCompletable(val file: File) : Completable() {
@@ -39,6 +26,11 @@ class RecordsPlayer @Inject constructor(
             val disposable = MediaPlayerDisposable(mediaPlayer)
             observer.onSubscribe(disposable)
             if (disposable.isDisposed) {
+                return
+            }
+
+            if (!file.exists()) {
+                observer.onError(FileNotFoundException("File $file does not exist"))
                 return
             }
 

@@ -6,6 +6,8 @@ import com.jraska.recorder.AppSchedulers
 import com.jraska.recorder.db.RecorderRepository
 import com.jraska.recorder.rx.combineLatest
 import com.jraska.recorder.rx.toLiveData
+import io.reactivex.disposables.CompositeDisposable
+import timber.log.Timber
 import javax.inject.Inject
 
 class RecorderViewModel @Inject constructor(
@@ -15,7 +17,8 @@ class RecorderViewModel @Inject constructor(
     private val recorder: Recorder
 ) : ViewModel() {
 
-    var recording: Recorder.OngoingRecording? = null
+    private var recording: Recorder.OngoingRecording? = null
+    private val disposables = CompositeDisposable()
 
     fun state(): LiveData<ViewState> {
         return recorderRepository.records()
@@ -27,7 +30,11 @@ class RecorderViewModel @Inject constructor(
     }
 
     fun onItemClicked(record: Record) {
-        recordPlayer.play(record.id)
+        val disposable = recordPlayer.player(record.id)
+            .subscribeOn(appSchedulers.io)
+            .subscribe({ Timber.d("Played $record") }, { Timber.e(it) })
+
+        disposables.add(disposable)
     }
 
     fun onRecordToggleClicked() {
@@ -41,6 +48,10 @@ class RecorderViewModel @Inject constructor(
         } else {
             this.recording = recorder.startRecording()
         }
+    }
+
+    override fun onCleared() {
+        disposables.clear()
     }
 
     data class ViewState(
