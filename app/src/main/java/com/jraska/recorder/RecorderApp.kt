@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.jakewharton.threetenabp.AndroidThreeTen
+import com.jraska.recorder.db.DaggerDatabaseComponent
+import com.jraska.recorder.db.DatabaseModule
 import timber.log.Timber
 
 open class RecorderApp : Application() {
@@ -39,6 +41,11 @@ open class RecorderApp : Application() {
     private fun createAppComponent(): AppComponent {
         return DaggerAppComponent.builder()
             .appModule(AppModule(filesDir))
+            .databaseComponent(
+                DaggerDatabaseComponent.builder()
+                    .databaseModule(DatabaseModule(this))
+                    .build()
+            )
             .build()
     }
 }
