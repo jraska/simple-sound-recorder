@@ -2,11 +2,10 @@ package com.jraska.recorder
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.epoxy.SimpleEpoxyAdapter
-import com.google.android.material.snackbar.Snackbar
-import com.jraska.recorder.recording.Record
 import com.jraska.recorder.recording.RecordModel
 import com.jraska.recorder.recording.RecorderViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,17 +24,25 @@ class RecorderActivity : AppCompatActivity() {
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(this)
 
-        main_fab.setOnClickListener { view ->
-            Snackbar.make(view, "TODO: Recording", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+        main_fab.setOnClickListener { viewModel.onRecordToggleClicked() }
 
-        viewModel.items().observe(this, Observer { onItems(it) })
+        viewModel.state().observe(this, Observer { onState(it) })
     }
 
-    private fun onItems(records: List<Record>) {
-        val models = records.map { RecordModel(it, viewModel::onItemClicked) }
+    private fun onState(state: RecorderViewModel.ViewState) {
+        val models = state.records.map { RecordModel(it, viewModel::onItemClicked) }
         adapter.removeAllModels()
         adapter.addModels(models)
+
+        main_fab.isEnabled = state.recordingState.uiEnabled
+        if (state.recordingState.recording) {
+            setFabIcon(android.R.drawable.ic_dialog_alert)
+        } else {
+            setFabIcon(android.R.drawable.ic_dialog_dialer)
+        }
+    }
+
+    private fun setFabIcon(resource: Int) {
+        main_fab.setImageDrawable(ContextCompat.getDrawable(this, resource))
     }
 }

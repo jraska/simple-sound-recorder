@@ -2,6 +2,8 @@ package com.jraska.recorder.recording
 
 import androidx.lifecycle.ViewModel
 import com.jraska.recorder.AppSingleton
+import com.jraska.recorder.db.RecordDao
+import com.jraska.recorder.db.RecorderRepository
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.ClassKey
@@ -12,8 +14,8 @@ class RecorderModule {
 
     @Provides
     @AppSingleton
-    fun repository(): RecorderRepository {
-        return RecorderRepository()
+    fun repository(dao: RecordDao): RecorderRepository {
+        return RecorderRepository(dao)
     }
 
     @Provides

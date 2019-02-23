@@ -1,3 +1,5 @@
 package com.jraska.recorder.recording
 
-class Record(val title: String)
+import java.util.*
+
+data class Record(val id: UUID, val title: String)
