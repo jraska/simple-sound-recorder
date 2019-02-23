@@ -38,6 +38,7 @@ open class RecorderApp : Application() {
 
     private fun createAppComponent(): AppComponent {
         return DaggerAppComponent.builder()
+            .appModule(AppModule(filesDir))
             .build()
     }
 }

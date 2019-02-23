@@ -1,12 +1,12 @@
 package com.jraska.recorder.recording
 
 import io.reactivex.Observable
-import io.reactivex.Single
+import java.util.*
 
 class RecorderRepository constructor(
 
 ) {
     fun records(): Observable<List<Record>> {
-        return Observable.just(listOf(Record("Hello world"), Record("Greetings")))
+        return Observable.just(listOf(Record(UUID.randomUUID(), "Hello world"), Record(UUID.randomUUID(), "Greetings")))
     }
 }
