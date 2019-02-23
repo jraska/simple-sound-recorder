@@ -7,7 +7,9 @@ import dagger.Provides
 import java.io.File
 
 @Module
-class AppModule(val soundDir: File) {
+class AppModule(
+    private val soundDir: File
+) {
     @Provides
     @AppSingleton
     fun viewModelFactoryBinding(factory: ViewModelFactory): ViewModelProvider.Factory {

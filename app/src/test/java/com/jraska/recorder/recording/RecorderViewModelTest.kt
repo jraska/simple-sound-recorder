@@ -3,6 +3,9 @@ package com.jraska.recorder.recording
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.jraska.livedata.test
 import com.jraska.recorder.*
+import com.jraska.recorder.db.DatabaseComponent
+import com.jraska.recorder.db.InMemoryRecordDao
+import com.jraska.recorder.db.RecordDao
 import io.reactivex.schedulers.Schedulers
 import org.junit.Rule
 import org.junit.Test
@@ -28,6 +31,11 @@ class RecorderViewModelTest {
             return DaggerAppComponent.builder()
                 .schedulersModule(SchedulersModule(schedulers))
                 .appModule(AppModule(File("")))
+                .databaseComponent(object : DatabaseComponent {
+                    override fun recordDao(): RecordDao {
+                        return InMemoryRecordDao()
+                    }
+                })
                 .build()
         }
     }
