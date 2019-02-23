@@ -1,20 +1,17 @@
 package com.jraska.recorder
 
 import android.app.Application
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.jraska.recorder.db.DaggerDatabaseComponent
 import com.jraska.recorder.db.DatabaseModule
 import timber.log.Timber
 
-open class RecorderApp : Application() {
+open class RecorderApp : Application(), HasViewModelFactory {
 
     private val appComponent: AppComponent by lazy { createAppComponent() }
 
-    fun viewModelFactory(): ViewModelProvider.Factory {
+    override fun factory(): ViewModelProvider.Factory {
         return appComponent.viewModelFactory()
     }
 
@@ -48,9 +45,4 @@ open class RecorderApp : Application() {
             )
             .build()
     }
-}
-
-fun <T : ViewModel> FragmentActivity.viewModel(modelClass: Class<T>): T {
-    val factory = (application as RecorderApp).viewModelFactory()
-    return ViewModelProviders.of(this, factory).get(modelClass)
 }
