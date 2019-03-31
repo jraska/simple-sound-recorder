@@ -2,7 +2,7 @@ package com.jraska.recorder.recording
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.jraska.recorder.AppSchedulers
+import com.jraska.recorder.rx.AppSchedulers
 import com.jraska.recorder.db.RecorderRepository
 import com.jraska.recorder.rx.combineLatest
 import com.jraska.recorder.rx.toLiveData
