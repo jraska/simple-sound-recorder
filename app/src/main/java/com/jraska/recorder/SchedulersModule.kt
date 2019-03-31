@@ -1,5 +1,6 @@
 package com.jraska.recorder
 
+import com.jraska.recorder.rx.AppSchedulers
 import dagger.Module
 import dagger.Provides
 import io.reactivex.android.schedulers.AndroidSchedulers

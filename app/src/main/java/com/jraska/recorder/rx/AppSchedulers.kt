@@ -1,4 +1,4 @@
-package com.jraska.recorder
+package com.jraska.recorder.rx
 
 import io.reactivex.Scheduler
 

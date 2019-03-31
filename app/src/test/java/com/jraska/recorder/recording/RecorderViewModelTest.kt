@@ -6,6 +6,7 @@ import com.jraska.recorder.*
 import com.jraska.recorder.db.DatabaseComponent
 import com.jraska.recorder.db.InMemoryRecordDao
 import com.jraska.recorder.db.RecordDao
+import com.jraska.recorder.rx.AppSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.junit.Rule
 import org.junit.Test
@@ -26,7 +27,11 @@ class RecorderViewModelTest {
 
     companion object {
         fun testComponent(): AppComponent {
-            val schedulers = AppSchedulers(Schedulers.trampoline(), Schedulers.trampoline(), Schedulers.trampoline())
+            val schedulers = AppSchedulers(
+                Schedulers.trampoline(),
+                Schedulers.trampoline(),
+                Schedulers.trampoline()
+            )
 
             return DaggerAppComponent.builder()
                 .schedulersModule(SchedulersModule(schedulers))
